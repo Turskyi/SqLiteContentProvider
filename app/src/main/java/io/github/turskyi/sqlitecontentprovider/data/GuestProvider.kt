@@ -74,7 +74,7 @@ class GuestProvider : ContentProvider() {
         querySelectionArgs: Array<String?>?,
         sortOrder: String?
     ): Cursor {
-        // Получим доступ к базе данных для чтения
+        // getting access to the database for reading
         var selection = querySelection
         var selectionArgs = querySelectionArgs
         val database = mDbHelper!!.readableDatabase
@@ -112,7 +112,7 @@ class GuestProvider : ContentProvider() {
             }
             else -> throw IllegalArgumentException("Cannot query unknown URI $uri")
         }
-        cursor.setNotificationUri(context!!.contentResolver, uri)
+        cursor.setNotificationUri(requireContext().contentResolver, uri)
         return cursor
     }
 
@@ -193,7 +193,7 @@ class GuestProvider : ContentProvider() {
      */
     private fun insertGuest(uri: Uri, values: ContentValues): Uri? {
         // Check that the name is not null
-        val name = values.getAsString(GuestEntry.COLUMN_NAME)
+        values.getAsString(GuestEntry.COLUMN_NAME)
             ?: throw IllegalArgumentException("Guest requires a name")
 
         // Check that the gender is valid
@@ -216,7 +216,7 @@ class GuestProvider : ContentProvider() {
             Log.e(TAG, "Failed to insert row for $uri")
             return null
         }
-        context!!.contentResolver.notifyChange(uri, null)
+        requireContext().contentResolver.notifyChange(uri, null)
 
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id)
@@ -236,7 +236,7 @@ class GuestProvider : ContentProvider() {
         // If the {@link GuestEntry#COLUMN_NAME} key is present,
         // check that the name value is not null.
         if (values.containsKey(GuestEntry.COLUMN_NAME)) {
-            val name = values.getAsString(GuestEntry.COLUMN_NAME)
+            values.getAsString(GuestEntry.COLUMN_NAME)
                 ?: throw IllegalArgumentException("Guest requires a name")
         }
 
