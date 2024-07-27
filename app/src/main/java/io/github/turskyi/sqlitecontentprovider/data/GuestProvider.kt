@@ -4,11 +4,12 @@ import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.UriMatcher
-import io.github.turskyi.sqlitecontentprovider.data.HotelContract.GuestEntry
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.util.Log
-import androidx.annotation.Nullable
+import androidx.annotation.RequiresApi
+import io.github.turskyi.sqlitecontentprovider.data.HotelContract.GuestEntry
 
 class GuestProvider : ContentProvider() {
     companion object {
@@ -61,12 +62,14 @@ class GuestProvider : ContentProvider() {
      * Database helper object
      */
     private var mDbHelper: HotelDbHelper? = null
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(): Boolean {
         mDbHelper = HotelDbHelper(requireContext())
         return true
     }
 
-    @Nullable
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun query(
         uri: Uri,
         projection: Array<String?>?,
@@ -116,7 +119,6 @@ class GuestProvider : ContentProvider() {
         return cursor
     }
 
-    @Nullable
     override fun getType(uri: Uri): String {
         return when (val match = sUriMatcher.match(uri)) {
             GUESTS -> GuestEntry.CONTENT_LIST_TYPE
@@ -125,7 +127,7 @@ class GuestProvider : ContentProvider() {
         }
     }
 
-    @Nullable
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         val match = sUriMatcher.match(uri)
         return if (match == GUESTS && values != null) insertGuest(uri, values)
@@ -162,6 +164,7 @@ class GuestProvider : ContentProvider() {
         return rowsDeleted
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun update(
         uri: Uri,
         values: ContentValues?,
@@ -191,6 +194,7 @@ class GuestProvider : ContentProvider() {
      * Insert a guest into the database with the given content values. Return the new content URI
      * for that specific row in the database.
      */
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun insertGuest(uri: Uri, values: ContentValues): Uri? {
         // Check that the name is not null
         values.getAsString(GuestEntry.COLUMN_NAME)
@@ -227,6 +231,7 @@ class GuestProvider : ContentProvider() {
      * specified in the selection and selection arguments (which could be 0 or 1 or more guests).
      * Return the number of rows that were successfully updated.
      */
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun updateGuest(
         uri: Uri,
         values: ContentValues,

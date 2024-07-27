@@ -31,7 +31,7 @@ class FirstFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     /** Adapter for ListView  */
-    var mCursorAdapter: GuestCursorAdapter? = null
+    private var mCursorAdapter: GuestCursorAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,7 @@ class FirstFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        val guestListView: ListView = view.findViewById(R.id.list) as ListView
+        val guestListView: ListView = view.findViewById(R.id.list)
         initAdapter(view, guestListView)
         LoaderManager.getInstance(this).initLoader(GUEST_LOADER, null, this)
         initListeners(guestListView, view)
@@ -80,12 +80,14 @@ class FirstFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_insert_new_data -> {
                 insertGuest()
                 return true
             }
+
             R.id.action_delete_all_entries -> {
                 deleteAllGuests()
                 return true
@@ -109,15 +111,19 @@ class FirstFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         /* Create a ContentValues object where the column names are keys
          and the guest information is the key values. */
         val values = ContentValues()
-        values.put(GuestEntry.COLUMN_NAME, "Murzik")
+        values.put(GuestEntry.COLUMN_NAME, "Murzyk")
         values.put(GuestEntry.COLUMN_CITY, "Kyiv")
         values.put(GuestEntry.COLUMN_GENDER, GuestEntry.GENDER_MALE)
         values.put(GuestEntry.COLUMN_AGE, 7)
-       requireContext().contentResolver.insert(GuestEntry.CONTENT_URI, values)
+        requireContext().contentResolver.insert(GuestEntry.CONTENT_URI, values)
     }
 
     private fun deleteAllGuests() {
-        requireContext().contentResolver.delete(GuestEntry.CONTENT_URI, null, null)
+        requireContext().contentResolver.delete(
+            GuestEntry.CONTENT_URI,
+            null,
+            null
+        )
         // refresh view
         parentFragmentManager
             .beginTransaction()
@@ -130,10 +136,16 @@ class FirstFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         guestListView.onItemClickListener =
             OnItemClickListener { _, _, _, id ->
 
-                val currentGuestUri = ContentUris.withAppendedId(GuestEntry.CONTENT_URI, id)
+                val currentGuestUri: Uri =
+                    ContentUris.withAppendedId(
+                        GuestEntry.CONTENT_URI, id,
+                    )
                 val args = Bundle()
                 args.putString(ARG_URI, currentGuestUri.toString())
-                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, args)
+                findNavController().navigate(
+                    R.id.action_FirstFragment_to_SecondFragment,
+                    args,
+                )
             }
         view.findViewById<Button>(R.id.button_first).setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)

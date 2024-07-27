@@ -51,11 +51,11 @@ class GuestCursorAdapter(context: Context?, cursor: Cursor?) :
         val nameTextView = view.findViewById<View>(R.id.name) as TextView
         val summaryTextView = view.findViewById<View>(R.id.summary) as TextView
 
-        // Find the columns of guest attributes that we're interested in
+        // Find the columns of guest attributes that we're interested in.
         val nameColumnIndex = cursor.getColumnIndex(GuestEntry.COLUMN_NAME)
         val cityColumnIndex = cursor.getColumnIndex(GuestEntry.COLUMN_CITY)
 
-        // Read the guest attributes from the Cursor for the current guest
+        // Read the guest attributes from the Cursor for the current guest.
         val guestName = cursor.getString(nameColumnIndex)
         var guestCity = cursor.getString(cityColumnIndex)
 
@@ -65,7 +65,7 @@ class GuestCursorAdapter(context: Context?, cursor: Cursor?) :
             guestCity = "unknown"
         }
 
-        // Update the TextViews with the attributes for the current guest
+        // Update the TextViews with the attributes for the current guest.
         nameTextView.text = guestName
         summaryTextView.text = guestCity
     }

@@ -11,8 +11,11 @@ import io.github.turskyi.sqlitecontentprovider.data.HotelContract.GuestEntry
  *
  * @param context application context
  */
-class HotelDbHelper(context: Context) :
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class HotelDbHelper(context: Context) : SQLiteOpenHelper(
+    context, DATABASE_NAME,
+    null,
+    DATABASE_VERSION,
+) {
 
     companion object {
 
@@ -32,23 +35,31 @@ class HotelDbHelper(context: Context) :
      */
     override fun onCreate(db: SQLiteDatabase) {
         // The string to create the table
-        val sqlCreateGuestsTable = ("CREATE TABLE " + GuestEntry.TABLE_NAME + " ("
-                + GuestEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + GuestEntry.COLUMN_NAME + " TEXT NOT NULL, "
-                + GuestEntry.COLUMN_CITY + " TEXT NOT NULL, "
-                + GuestEntry.COLUMN_GENDER + " INTEGER NOT NULL DEFAULT 3, "
-                + GuestEntry.COLUMN_AGE + " INTEGER NOT NULL DEFAULT 0);")
+        val sqlCreateGuestsTable: String =
+            ("CREATE TABLE " + GuestEntry.TABLE_NAME + " ("
+                    + GuestEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + GuestEntry.COLUMN_NAME + " TEXT NOT NULL, "
+                    + GuestEntry.COLUMN_CITY + " TEXT NOT NULL, "
+                    + GuestEntry.COLUMN_GENDER + " INTEGER NOT NULL DEFAULT 3, "
+                    + GuestEntry.COLUMN_AGE + " INTEGER NOT NULL DEFAULT 0);")
 
-        // Start creating the table
+        // Start creating the table.
         db.execSQL(sqlCreateGuestsTable)
     }
 
     /**
      * Called when the database schema is updated
      */
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Let's write to the log
-        Log.w("SQLite", "Updating from version $oldVersion to version $newVersion")
+    override fun onUpgrade(
+        db: SQLiteDatabase,
+        oldVersion: Int,
+        newVersion: Int
+    ) {
+        // Let's write to the log.
+        Log.w(
+            "SQLite",
+            "Updating from version $oldVersion to version $newVersion."
+        )
 
         // Delete the old table and create a new one
         db.execSQL("DROP TABLE IF IT EXISTS " + GuestEntry.TABLE_NAME)
